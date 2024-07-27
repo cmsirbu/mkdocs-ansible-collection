@@ -1,0 +1,12 @@
+---
+site_name: "MkDocs Ansible Collection"
+theme: readthedocs
+
+plugins:
+  - ansible-collection:
+      collections:
+        - "ansible.builtin"
+        - "ansible.posix"
+
+nav:
+  - "index.md"

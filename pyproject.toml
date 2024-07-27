@@ -1,0 +1,47 @@
+[tool.poetry]
+name = "mkdocs-ansible-collection"
+version = "0.1.0"
+description = "MkDocs Plugin that automatically generates pages for Ansible Collections."
+authors = ["Cristian Sirbu <cristian@trueneutral.eu>"]
+repository = "https://github.com/cmsirbu/mkdocs-ansible-collection"
+readme = "README.md"
+classifiers = [
+    "Intended Audience :: Developers",
+    "Development Status :: 4 - Beta",
+    # "Development Status :: 5 - Production/Stable",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Documentation",
+    "Topic :: Text Processing",
+]
+packages = [
+    { include = "mkdocs_ansible_collection" }
+]
+
+[tool.poetry.plugins."mkdocs.plugins"]
+ansible-collection = "mkdocs_ansible_collection.plugin:AnsibleDocsPlugin"
+
+[tool.poetry.dependencies]
+python = "^3.9"
+mkdocs = "^1.6.0"
+ansible-core = "^2.15"
+
+[tool.poetry.group.dev.dependencies]
+ruff = "^0.5.5"
+yamllint = "^1.35.1"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.ruff]
+line-length = 100
+
+[tool.ruff.format]
+indent-style = "space"
+line-ending = "lf"
