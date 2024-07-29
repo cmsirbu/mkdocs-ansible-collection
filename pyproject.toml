@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "mkdocs-ansible-collection"
-version = "0.1.0"
+version = "0.1.1"
 description = "MkDocs Plugin that automatically generates pages for Ansible Collections."
 authors = ["Cristian Sirbu <cristian@trueneutral.eu>"]
 repository = "https://github.com/cmsirbu/mkdocs-ansible-collection"
@@ -34,6 +34,9 @@ ansible-core = "^2.15"
 [tool.poetry.group.dev.dependencies]
 ruff = "^0.5.5"
 yamllint = "^1.35.1"
+
+[tool.poetry.group.docs.dependencies]
+mkdocs-material = "^9.5.30"
 
 [build-system]
 requires = ["poetry-core"]
