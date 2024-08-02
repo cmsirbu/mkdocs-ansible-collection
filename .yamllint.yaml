@@ -1,0 +1,14 @@
+---
+extends: "default"
+rules:
+  comments: "enable"
+  indentation:
+    spaces: 2
+    indent-sequences: true
+  line-length: "disable"
+  quoted-strings:
+    quote-type: "double"
+    required: true
+ignore: |
+  .venv/
+  collections
