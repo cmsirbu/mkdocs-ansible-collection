@@ -1,8 +1,10 @@
-import mkdocs
-import subprocess
-import json
+"""MkDocs Plugin that automatically generates pages for Ansible Collections."""
 
+import json
+import subprocess
 from importlib.resources import files as package_files
+
+import mkdocs
 from jinja2 import Environment, FileSystemLoader, select_autoescape
 from mkdocs.exceptions import PluginError
 from mkdocs.plugins import get_plugin_logger
@@ -13,18 +15,44 @@ log = get_plugin_logger(__name__)
 
 
 class AnsibleDocsPluginConfig(mkdocs.config.base.Config):
+    """MkDocs Plugin configuration."""
+
     # plugins = mkdocs.config.config_options.Type(list, default=[])
     collections = mkdocs.config.config_options.Type(list, default=[])
 
 
 class AnsibleDocsPlugin(mkdocs.plugins.BasePlugin[AnsibleDocsPluginConfig]):
-    def on_pre_build(self, config, **kwargs):
+    """MkDocs Plugin Class."""
+
+    def on_pre_build(self, config):
+        """
+        Event handler for the pre_build stage.
+
+        Args:
+            config (MkDocsConfig): global configuration object
+
+        See:
+            https://www.mkdocs.org/dev-guide/plugins/#events
+        """
         # if self.config.plugins:
         #     log.debug(f"Plugins list: {self.config.plugins}")
         if self.config.collections:
             log.debug(f"Collections list: {self.config.collections}")
 
     def on_files(self, files, config):
+        """
+        Event handler for the on_files stage.
+
+        Args:
+            files (Files): global files collection
+            config (MkDocsConfig): global configuration object
+
+        Returns:
+            Files | None: global files collection
+
+        See:
+            https://www.mkdocs.org/dev-guide/plugins/#events
+        """
         # Load templates from package and initialize Jinja environment
         log.debug(
             f"Jinja templates path {package_files('mkdocs_ansible_collection') / 'templates'}"
@@ -78,14 +106,39 @@ class AnsibleDocsPlugin(mkdocs.plugins.BasePlugin[AnsibleDocsPluginConfig]):
 
     # Comment this when code is stable, used only for debugging
     def on_nav(self, nav, config, files):
+        """
+        Event handler for the on_nav stage.
+
+        Args:
+            nav (Navigation): global navigation object
+            files (Files): global files collection
+            config (MkDocsConfig): global configuration object
+
+        Returns:
+            Navigation | None: global navigation object
+
+        See:
+            https://www.mkdocs.org/dev-guide/plugins/#events
+        """
         log.debug(f"config.nav = {config.nav}")
         # breakpoint()
 
     @staticmethod
     def _get_ansible_doc_metadata(fqcn):
+        """
+        Retrieve Ansible collection metadata via the ansible-doc command.
+
+        Args:
+            fqcn (string): ansible fully-qualified collection name
+
+        Returns:
+            dict: parsed collection metadata from JSON
+        """
         log.info(f"Fetching collection {fqcn} metadata from ansible-doc.")
         result = subprocess.run(
-            ["ansible-doc", "--metadata-dump", "--no-fail-on-errors", fqcn], capture_output=True
+            ["ansible-doc", "--metadata-dump", "--no-fail-on-errors", fqcn],
+            capture_output=True,
+            check=False,
         )
         if result.returncode != 0:
             command = " ".join(["ansible-doc", "--metadata-dump", "--no-fail-on-errors", fqcn])

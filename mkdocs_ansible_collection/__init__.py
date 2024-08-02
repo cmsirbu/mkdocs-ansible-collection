@@ -1,0 +1,1 @@
+"""MkDocs Ansible Collection package."""

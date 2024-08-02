@@ -19,9 +19,7 @@ classifiers = [
     "Topic :: Documentation",
     "Topic :: Text Processing",
 ]
-packages = [
-    { include = "mkdocs_ansible_collection" }
-]
+packages = [{ include = "mkdocs_ansible_collection" }]
 
 [tool.poetry.plugins."mkdocs.plugins"]
 ansible-collection = "mkdocs_ansible_collection.plugin:AnsibleDocsPlugin"
@@ -44,7 +42,26 @@ build-backend = "poetry.core.masonry.api"
 
 [tool.ruff]
 line-length = 100
+target-version = "py39"
 
 [tool.ruff.format]
 indent-style = "space"
 line-ending = "lf"
+
+[tool.ruff.lint]
+select = [
+    "D",  # pydocstyle
+    "F",  # pyflakes
+    "E",  # pyflakes
+    "W",  # pyflakes
+    "PL", # pylint
+    "I",  # isort
+    "UP", # pyupgrade
+    "PL", # pylint
+]
+ignore = [
+    "D212", # Multi-line docstring summary should start at the first line
+]
+
+[tool.ruff.lint.pydocstyle]
+convention = "google"
