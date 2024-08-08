@@ -2,8 +2,10 @@
 
 This collection contains the following plugin types:
 
+| Plugin Type | Count |
+| ----------- | ----- |
 {% for plugin_type in plugin_types %}
 {% if plugin_types[plugin_type] | length > 0 %}
-- [{{ plugin_type }}](./{{ plugin_type }}.md)
+| [{{ plugin_type }}](./{{ plugin_type }}/index.md) | {{ plugin_types[plugin_type] | length }}
 {% endif %}
 {% endfor %}

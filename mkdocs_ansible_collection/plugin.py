@@ -24,6 +24,23 @@ class AnsibleDocsPluginConfig(mkdocs.config.base.Config):
 class AnsibleDocsPlugin(mkdocs.plugins.BasePlugin[AnsibleDocsPluginConfig]):
     """MkDocs Plugin Class."""
 
+    # TODO: Remove once all plugin types have a corresponding jinja template
+    PLUGIN_MAP = {"filter": "filter"}
+
+    def __init__(self, *args, **kwargs):
+        """Instantiation."""
+        super().__init__(*args, **kwargs)
+
+        # Load templates from package and initialize Jinja environment
+        log.debug(
+            f"Jinja templates path {package_files('mkdocs_ansible_collection') / 'templates'}"
+        )
+        self.jinja_env = Environment(
+            loader=FileSystemLoader(package_files("mkdocs_ansible_collection") / "templates"),
+            autoescape=select_autoescape(default=True),
+            trim_blocks=True,
+        )
+
     def on_pre_build(self, config):
         """
         Event handler for the pre_build stage.
@@ -53,52 +70,58 @@ class AnsibleDocsPlugin(mkdocs.plugins.BasePlugin[AnsibleDocsPluginConfig]):
         See:
             https://www.mkdocs.org/dev-guide/plugins/#events
         """
-        # Load templates from package and initialize Jinja environment
-        log.debug(
-            f"Jinja templates path {package_files('mkdocs_ansible_collection') / 'templates'}"
-        )
-        jinja_env = Environment(
-            loader=FileSystemLoader(package_files("mkdocs_ansible_collection") / "templates"),
-            autoescape=select_autoescape(default=True),
-            trim_blocks=True,
-        )
-
         for fqcn in self.config.collections:
             # Get collection metadata by running ansible-doc
             collection_metadata = AnsibleDocsPlugin._get_ansible_doc_metadata(fqcn)
 
             # Generate the index for the collection sub-path
-            nf = mkdocs.structure.files.File(
-                f"{fqcn}/index.md", src_dir=None, dest_dir=config.site_dir, use_directory_urls=False
+            files.append(
+                self._generate_page(
+                    path=f"{fqcn}/index.md",
+                    site_dir=config.site_dir,
+                    template="collection_index.md.jinja",
+                    fqcn=fqcn,
+                    plugin_types=collection_metadata["all"],
+                )
             )
-            nf.generated_by = "ansible-docs"
-
-            jinja_template = jinja_env.get_template("collection_index.md.jinja")
-            nf.content_string = jinja_template.render(
-                plugin_types=collection_metadata["all"], fqcn=fqcn
-            )
-
-            files.append(nf)
             collection_nav = {f"{fqcn}": [f"{fqcn}/index.md"]}
 
             for plugin_type in collection_metadata["all"]:
                 plugins = collection_metadata["all"][plugin_type]
                 if len(plugins) == 0:
                     continue
+                sub_nav = {f"{plugin_type}": [f"{fqcn}/{plugin_type}/index.md"]}
 
-                nf = mkdocs.structure.files.File(
-                    f"{fqcn}/{plugin_type}.md",
-                    src_dir=None,
-                    dest_dir=config.site_dir,
-                    use_directory_urls=False,
+                files.append(
+                    self._generate_page(
+                        path=f"{fqcn}/{plugin_type}/index.md",
+                        site_dir=config.site_dir,
+                        template="plugin_list.md.jinja",
+                        fqcn=fqcn,
+                        plugin_type=plugin_type,
+                        plugins=plugins,
+                    )
                 )
-                nf.generated_by = "ansible-docs"
 
-                jinja_template = jinja_env.get_template("plugin_list.md.jinja")
-                nf.content_string = jinja_template.render(plugin_type=plugin_type, plugins=plugins)
+                for plugin in plugins:
+                    plugin_name = plugin.removeprefix(fqcn + ".")
+                    files.append(
+                        self._generate_page(
+                            path=f"{fqcn}/{plugin_type}/{plugin_name}.md",
+                            site_dir=config.site_dir,
+                            # TODO: replace line once the mapping is not needed
+                            # template=f"{plugin_type}.md.jinja",
+                            template=f"{AnsibleDocsPlugin.PLUGIN_MAP.get(plugin_type, 'default')}.md.jinja",  # noqa
+                            plugin=plugin,
+                            plugin_data=plugins[plugin],
+                        )
+                    )
 
-                files.append(nf)
-                collection_nav[fqcn].append({f"{plugin_type}": f"{fqcn}/{plugin_type}.md"})
+                    sub_nav[plugin_type].append(
+                        {f"{plugin_name}": f"{fqcn}/{plugin_type}/{plugin_name}.md"}
+                    )
+
+                collection_nav[fqcn].append(sub_nav)
 
             config.nav.append(collection_nav)
 
@@ -122,6 +145,28 @@ class AnsibleDocsPlugin(mkdocs.plugins.BasePlugin[AnsibleDocsPluginConfig]):
         """
         log.debug(f"config.nav = {config.nav}")
         # breakpoint()
+
+    def _generate_page(self, path, site_dir, template, **kwargs):
+        """Generates a new file in memory from a Jinja template.
+
+        Args:
+            path (str): relative path from the docs root with filename.md
+            site_dir (str): project config.site_dir
+            template (str): name of jinja template to use for rendering
+            kwargs (dict): data to pass to jinja.render
+
+        Returns:
+            mkdocs.structure.files.File: file object with generated content
+        """
+        nf = mkdocs.structure.files.File(
+            path, src_dir=None, dest_dir=site_dir, use_directory_urls=False
+        )
+        nf.generated_by = "ansible-collection"
+
+        jinja_template = self.jinja_env.get_template(template)
+        nf.content_string = jinja_template.render(**kwargs)
+
+        return nf
 
     @staticmethod
     def _get_ansible_doc_metadata(fqcn):
