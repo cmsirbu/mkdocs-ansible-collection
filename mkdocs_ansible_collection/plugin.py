@@ -25,7 +25,7 @@ class AnsibleDocsPlugin(mkdocs.plugins.BasePlugin[AnsibleDocsPluginConfig]):
     """MkDocs Plugin Class."""
 
     # TODO: Remove once all plugin types have a corresponding jinja template
-    PLUGIN_MAP = {"filter": "filter"}
+    PLUGIN_MAP = {"filter": "filter", "inventory": "inventory"}
 
     def __init__(self, *args, **kwargs):
         """Instantiation."""
@@ -39,6 +39,7 @@ class AnsibleDocsPlugin(mkdocs.plugins.BasePlugin[AnsibleDocsPluginConfig]):
             loader=FileSystemLoader(package_files("mkdocs_ansible_collection") / "templates"),
             autoescape=select_autoescape(default=True),
             trim_blocks=True,
+            lstrip_blocks=True,
         )
 
     def on_pre_build(self, config):
@@ -75,6 +76,8 @@ class AnsibleDocsPlugin(mkdocs.plugins.BasePlugin[AnsibleDocsPluginConfig]):
             collection_metadata = AnsibleDocsPlugin._get_ansible_doc_metadata(fqcn)
 
             # Generate the index for the collection sub-path
+            # TODO: extract requirements from all plugins and list on this page
+            # TODO: extract collection version
             files.append(
                 self._generate_page(
                     path=f"{fqcn}/index.md",
@@ -103,8 +106,14 @@ class AnsibleDocsPlugin(mkdocs.plugins.BasePlugin[AnsibleDocsPluginConfig]):
                     )
                 )
 
-                for plugin in plugins:
-                    plugin_name = plugin.removeprefix(fqcn + ".")
+                for plugin_fqname, plugin_data in plugins.items():
+                    if plugin_data.get("error") is not None:
+                        log.warning(
+                            f"Error returned for {plugin_fqname} by ansible-doc: {plugin_data['error']}"
+                        )
+                        continue
+                    log.debug(f"Generating page for {plugin_fqname}")
+                    plugin_name = plugin_fqname.removeprefix(fqcn + ".")
                     files.append(
                         self._generate_page(
                             path=f"{fqcn}/{plugin_type}/{plugin_name}.md",
@@ -112,8 +121,10 @@ class AnsibleDocsPlugin(mkdocs.plugins.BasePlugin[AnsibleDocsPluginConfig]):
                             # TODO: replace line once the mapping is not needed
                             # template=f"{plugin_type}.md.jinja",
                             template=f"{AnsibleDocsPlugin.PLUGIN_MAP.get(plugin_type, 'default')}.md.jinja",  # noqa
-                            plugin=plugin,
-                            plugin_data=plugins[plugin],
+                            fqcn=fqcn,
+                            plugin=plugin_fqname,
+                            plugin_name=plugin_name,
+                            plugin_data=plugin_data,
                         )
                     )
 

@@ -1,5 +1,30 @@
 # Collection - {{ fqcn }}
 
+## Useful Links
+
+- Ansible Galaxy: [{{ fqcn }}](https://galaxy.ansible.com/{{ fqcn | replace(".", "/") }})
+
+{# TODO: Find a way to extract useful URLs for the collection, like source repo, issues tracker etc. #}
+
+!!! note "Usage Note"
+     To install the collection, run:
+
+    ```
+    ansible-galaxy collection install {{ fqcn }}
+    ```
+
+    For more information about available versions, visit the [Ansible Galaxy](https://galaxy.ansible.com/{{ fqcn | replace(".", "/") }}) page.
+
+    {# {% if requirements is defined and requirements is not none %}
+    The following Python packages are needed on the host that executes this module:
+
+    {% for req in requirements %}
+    - [{{ req }}](https://pypi.org/project/{{ req }}/)
+    {% endfor %}
+    {% endif %} #}
+
+## Plugins
+
 This collection contains the following plugin types:
 
 | Plugin Type | Count |
@@ -9,3 +34,4 @@ This collection contains the following plugin types:
 | [{{ plugin_type }}](./{{ plugin_type }}/index.md) | {{ plugin_types[plugin_type] | length }}
 {% endif %}
 {% endfor %}
+

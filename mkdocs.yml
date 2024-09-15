@@ -37,12 +37,21 @@ theme:
         icon: "material/weather-night"
         name: "Switch to light mode"
 
+extra_css:
+  - "extra.css"
+
 plugins:
   - "search"
   - "ansible-collection":
       "collections":
         - "ansible.builtin"
         - "ansible.posix"
+        - "networktocode.nautobot"
+
+        # - name: "ansible.builtin"
+        #   plugin_types:
+        #     - inventory
+        #     - module
 
 markdown_extensions:
   - "admonition"

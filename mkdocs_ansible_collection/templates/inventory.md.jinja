@@ -1,0 +1,77 @@
+{% set pd = plugin_data['doc'] %}
+# {{ plugin_name }}
+
+!!! note "Collection Note"
+    This module is part of the [{{ fqcn }} collection](https://galaxy.ansible.com/{{ fqcn | replace(".", "/") }}). To install the collection, use:
+
+    ```
+    ansible-galaxy collection install {{ fqcn }}
+    ```
+    {% if pd['requirements'] is defined and pd['requirements'] is not none %}
+    You need further requirements to be able to use this module, see the [Requirements](#requirements) section for details.
+    {% endif %}
+
+## Synopsis
+
+{% for desc_item in pd['description'] %}
+- {{ desc_item}}
+{% endfor %}
+
+{% if pd['requirements'] is defined and pd['requirements'] is not none %}
+## Requirements
+
+The following Python packages are needed on the host that executes this module:
+
+{% for req in pd['requirements'] %}
+- [{{ req }}](https://pypi.org/project/{{ req }}/)
+{% endfor %}
+{% endif %}
+
+{% if pd['options'] is defined and pd['options'] is not none %}
+## Parameters
+
+| Parameter | Data Type | Environment Variable | Version Added | Comments |
+| --------- | --------- | -------------------- | ------------- | -------- |
+{% for param_name, param_values in pd['options'].items() %}
+{% if param_values['description'] is string %}
+| {{ param_name }} | {{ param_values['type'] }} | {% for env_var in param_values['env'] %} {{ env_var['name'] }} {% endfor %} | {{ param_values['version_added']  | default('') }} | {{ param_values['description'] }} |
+{% else %}
+| {{ param_name }} | {{ param_values['type'] }} | {% for env_var in param_values['env'] %} {{ env_var['name'] }} {% endfor %} | {{ param_values['version_added']  | default('') }} | {{ param_values['description'] | join(' ') }} |
+{% endif %}
+{% endfor %}
+{% endif %}
+
+{% if pd['notes'] is defined and pd['notes'] is not none %}
+## Notes
+
+!!! note "Note"
+{% for note in pd['notes'] %}
+    - {{ note }}
+{% endfor %}
+{% endif %}
+
+## Examples
+
+```yaml
+{{ plugin_data['examples'] }}
+```
+
+{% if plugin_data['return'] is not none %}
+## Return Values
+
+| Key | Data Type | Description | Returned |
+| --- | --------- | ----------- | -------- |
+{% for key, values in plugin_data['return'].items() %}
+{% if values['description'] is string %}
+| {{ key }} | {{ values['type'] }} | {{ values['description'] }} | {{ values['returned'] }} |
+{% else %}
+| {{ key }} | {{ values['type'] }} | {{ values['description'] | join(" ") }} | {{ values['returned'] }} |
+{% endif %}
+{% endfor %}
+{% endif %}
+
+## Authors
+
+{% for author in pd['author'] %}
+- {{ author }}
+{% endfor %}
