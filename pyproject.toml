@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "mkdocs-ansible-collection"
-version = "0.1.2"
+version = "0.1.3"
 description = "MkDocs Plugin that automatically generates pages for Ansible Collections."
 authors = ["Cristian Sirbu <cristian@trueneutral.eu>"]
 repository = "https://github.com/cmsirbu/mkdocs-ansible-collection"
