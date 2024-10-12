@@ -9,6 +9,8 @@ from jinja2 import Environment, FileSystemLoader, select_autoescape
 from mkdocs.exceptions import PluginError
 from mkdocs.plugins import get_plugin_logger
 
+from mkdocs_ansible_collection import DISABLED_PLUGIN_TYPES, PLUGIN_TO_TEMPLATE_MAP
+
 # Warning level messages break the build if --strict is passed!
 # Debug level messages show only if --verbose is passed!
 log = get_plugin_logger(__name__)
@@ -23,9 +25,6 @@ class AnsibleDocsPluginConfig(mkdocs.config.base.Config):
 
 class AnsibleDocsPlugin(mkdocs.plugins.BasePlugin[AnsibleDocsPluginConfig]):
     """MkDocs Plugin Class."""
-
-    # TODO: Remove once all plugin types have a corresponding jinja template
-    PLUGIN_MAP = {"filter": "filter", "inventory": "inventory"}
 
     def __init__(self, *args, **kwargs):
         """Instantiation."""
@@ -90,6 +89,12 @@ class AnsibleDocsPlugin(mkdocs.plugins.BasePlugin[AnsibleDocsPluginConfig]):
             collection_nav = {f"{fqcn}": [f"{fqcn}/index.md"]}
 
             for plugin_type in collection_metadata["all"]:
+                if plugin_type not in PLUGIN_TO_TEMPLATE_MAP:
+                    log.warning(
+                        f"Plugin type {plugin_type} is not yet supported"
+                        + " - please open an issue at https://github.com/cmsirbu/mkdocs-ansible-collection/issues/new"
+                    )
+
                 plugins = collection_metadata["all"][plugin_type]
                 if len(plugins) == 0:
                     continue
@@ -107,20 +112,21 @@ class AnsibleDocsPlugin(mkdocs.plugins.BasePlugin[AnsibleDocsPluginConfig]):
                 )
 
                 for plugin_fqname, plugin_data in plugins.items():
+                    # If there are any parsing issues for a plugin, ansible-doc will replace the
+                    # plugin metadata with an error message.
                     if plugin_data.get("error") is not None:
                         log.warning(
-                            f"Error returned for {plugin_fqname} by ansible-doc: {plugin_data['error']}"
+                            f"Error returned for {plugin_fqname} by ansible-doc: {plugin_data['error']}"  # noqa: E501
                         )
                         continue
+
                     log.debug(f"Generating page for {plugin_fqname}")
                     plugin_name = plugin_fqname.removeprefix(fqcn + ".")
                     files.append(
                         self._generate_page(
                             path=f"{fqcn}/{plugin_type}/{plugin_name}.md",
                             site_dir=config.site_dir,
-                            # TODO: replace line once the mapping is not needed
-                            # template=f"{plugin_type}.md.jinja",
-                            template=f"{AnsibleDocsPlugin.PLUGIN_MAP.get(plugin_type, 'default')}.md.jinja",  # noqa
+                            template=f"{PLUGIN_TO_TEMPLATE_MAP.get(plugin_type, 'default')}.md.jinja",  # noqa: E501
                             fqcn=fqcn,
                             plugin=plugin_fqname,
                             plugin_name=plugin_name,
@@ -191,13 +197,14 @@ class AnsibleDocsPlugin(mkdocs.plugins.BasePlugin[AnsibleDocsPluginConfig]):
             dict: parsed collection metadata from JSON
         """
         log.info(f"Fetching collection {fqcn} metadata from ansible-doc.")
+        ansible_doc_command_params = ["ansible-doc", "--metadata-dump", "--no-fail-on-errors", fqcn]
         result = subprocess.run(
-            ["ansible-doc", "--metadata-dump", "--no-fail-on-errors", fqcn],
+            ansible_doc_command_params,
             capture_output=True,
             check=False,
         )
         if result.returncode != 0:
-            command = " ".join(["ansible-doc", "--metadata-dump", "--no-fail-on-errors", fqcn])
+            command = " ".join(ansible_doc_command_params)
             log.error(f"Command {command} failed with stderr: {result.stderr}")
             raise PluginError(
                 f"Couldn't fetch collection {fqcn} metadata due to errors from ansible-doc!"
@@ -207,4 +214,9 @@ class AnsibleDocsPlugin(mkdocs.plugins.BasePlugin[AnsibleDocsPluginConfig]):
                 parsed_data = json.loads(result.stdout)
             except json.decoder.JSONDecodeError:
                 raise PluginError("Couldn't parse ansible-doc output as valid JSON data!")
+
+            # Remove plugin types that shouldn't be in the docs
+            for plugin_type in DISABLED_PLUGIN_TYPES:
+                del parsed_data["all"][plugin_type]
+
             return parsed_data
