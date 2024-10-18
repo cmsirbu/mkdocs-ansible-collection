@@ -44,14 +44,16 @@ plugins:
   - "search"
   - "ansible-collection":
       "collections":
-        - "ansible.builtin"
-        - "ansible.posix"
-        - "networktocode.nautobot"
+        - fqcn: "ansible.builtin"
+        - fqcn: "ansible.posix"
+        - fqcn: "networktocode.nautobot"
+        - fqcn: "ansible.netcommon"
+        - fqcn: "ansible.utils"
+        - fqcn: "arista.eos"
+          plugin_types: # NYI
+            - "inventory"
+            - "module"
 
-        # - name: "ansible.builtin"
-        #   plugin_types:
-        #     - inventory
-        #     - module
 
 markdown_extensions:
   - "admonition"
@@ -75,3 +77,11 @@ watch:
 
 nav:
   - "index.md"
+  - "Ansible Builtins": "ansible.builtin"
+  - "Collection Showcase":
+    - "showcase/index.md"
+    - "ansible.posix"
+    - "ansible.netcommon"
+    - "ansible.utils"
+    - "Arista EOS": "arista.eos"
+  - "networktocode.nautobot"
