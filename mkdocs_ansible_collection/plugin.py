@@ -51,8 +51,6 @@ class AnsibleDocsPlugin(mkdocs.plugins.BasePlugin[AnsibleDocsPluginConfig]):
         See:
             https://www.mkdocs.org/dev-guide/plugins/#events
         """
-        # if self.config.plugins:
-        #     log.debug(f"Plugins list: {self.config.plugins}")
         if self.config.collections:
             log.debug(f"Collections list: {self.config.collections}")
 
@@ -70,8 +68,9 @@ class AnsibleDocsPlugin(mkdocs.plugins.BasePlugin[AnsibleDocsPluginConfig]):
         See:
             https://www.mkdocs.org/dev-guide/plugins/#events
         """
-        for fqcn in self.config.collections:
+        for collection in self.config.collections:
             # Get collection metadata by running ansible-doc
+            fqcn = collection["fqcn"]
             collection_metadata = AnsibleDocsPlugin._get_ansible_doc_metadata(fqcn)
 
             # Generate the index for the collection sub-path
@@ -140,7 +139,33 @@ class AnsibleDocsPlugin(mkdocs.plugins.BasePlugin[AnsibleDocsPluginConfig]):
 
                 collection_nav[fqcn].append(sub_nav)
 
-            config.nav.append(collection_nav)
+            # Find the correct nav location to insert the section
+            stack = [config.nav]
+            found = False
+            while stack:
+                entry = stack.pop(0)
+                if isinstance(entry, dict):
+                    for k, v in entry.items():
+                        if v == fqcn:
+                            entry[k] = collection_nav[fqcn]
+                            found = True
+                            break
+                    else:
+                        stack.append(list(entry.values()))
+                elif isinstance(entry, list):
+                    if fqcn in entry:
+                        index = entry.index(fqcn)
+                        entry[index] = collection_nav
+                        found = True
+                        break
+                    else:
+                        stack += entry
+
+            if not found:
+                raise PluginError(
+                    f"Couldn't find collection placeholder in the nav for {fqcn}!"
+                    + " Please check your mkdocs configuration!"
+                )
 
         return files
 
