@@ -14,6 +14,10 @@ PLUGIN_TO_TEMPLATE_MAP = {
     "strategy": "default",
     "test": "default",
     "vars": "default",
+    "cliconf": None,
+    "httpapi": None,
+    "netconf": None,
+    "role": None,
 }
 
 DISABLED_PLUGIN_TYPES = ["keyword"]

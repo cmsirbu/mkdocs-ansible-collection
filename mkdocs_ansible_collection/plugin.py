@@ -54,7 +54,7 @@ class AnsibleDocsPlugin(mkdocs.plugins.BasePlugin[AnsibleDocsPluginConfig]):
         if self.config.collections:
             log.debug(f"Collections list: {self.config.collections}")
 
-    def on_files(self, files, config):
+    def on_files(self, files, config):  # noqa: PLR0912 Too many branches
         """
         Event handler for the on_files stage.
 
@@ -76,6 +76,7 @@ class AnsibleDocsPlugin(mkdocs.plugins.BasePlugin[AnsibleDocsPluginConfig]):
             # Generate the index for the collection sub-path
             # TODO: extract requirements from all plugins and list on this page
             # TODO: extract collection version
+            # TODO: combine the PLUGIN_TO_TEMPLATE_MAP with enabled plugins from plugin config
             files.append(
                 self._generate_page(
                     path=f"{fqcn}/index.md",
@@ -83,6 +84,7 @@ class AnsibleDocsPlugin(mkdocs.plugins.BasePlugin[AnsibleDocsPluginConfig]):
                     template="collection_index.md.jinja",
                     fqcn=fqcn,
                     plugin_types=collection_metadata["all"],
+                    plugin_map=PLUGIN_TO_TEMPLATE_MAP,
                 )
             )
             collection_nav = {f"{fqcn}": [f"{fqcn}/index.md"]}
@@ -93,6 +95,9 @@ class AnsibleDocsPlugin(mkdocs.plugins.BasePlugin[AnsibleDocsPluginConfig]):
                         f"Plugin type {plugin_type} is not yet supported"
                         + " - please open an issue at https://github.com/cmsirbu/mkdocs-ansible-collection/issues/new"
                     )
+                # Disable some plugin_types that should not have generated pages
+                elif PLUGIN_TO_TEMPLATE_MAP[plugin_type] is None:
+                    continue
 
                 plugins = collection_metadata["all"][plugin_type]
                 if len(plugins) == 0:

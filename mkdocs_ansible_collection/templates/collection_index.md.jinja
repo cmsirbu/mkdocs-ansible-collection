@@ -25,13 +25,15 @@
 
 ## Plugins
 
-This collection contains the following plugin types:
+This collection contains the following plugin types (those without a link do not have documentation available):
 
 | Plugin Type | Count |
 | ----------- | ----- |
-{% for plugin_type in plugin_types %}
-{% if plugin_types[plugin_type] | length > 0 %}
-| [{{ plugin_type }}](./{{ plugin_type }}/index.md) | {{ plugin_types[plugin_type] | length }}
-{% endif %}
+{% for plugin_type in plugin_types if plugin_types[plugin_type] | length > 0 %}
+{% if plugin_map[plugin_type] != None %}
+| [{{ plugin_type }}](./{{ plugin_type }}/index.md) |
+{%- else %}
+| {{ plugin_type }} |
+{%- endif %}
+{{- plugin_types[plugin_type] | length }} |
 {% endfor %}
-
