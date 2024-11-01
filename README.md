@@ -16,9 +16,9 @@
 
     ```yaml
     plugins:
-    - "ansible-collection":
+      - "ansible-collection":
         "collections":
-            - fqcn: "collection.example"
+          - fqcn: "collection.example"
     ```
 
 4. Add an anchor page to the `nav` section of your project's `mkdocs.yml` file:
