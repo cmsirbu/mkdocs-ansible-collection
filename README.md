@@ -17,7 +17,7 @@
     ```yaml
     plugins:
       - "ansible-collection":
-          "collections":
+          collections:
             - fqcn: "collection.example"
     ```
 

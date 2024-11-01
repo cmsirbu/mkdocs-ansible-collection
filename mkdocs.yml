@@ -43,7 +43,7 @@ extra_css:
 plugins:
   - "search"
   - "ansible-collection":
-      "collections":
+      collections:
         - fqcn: "ansible.builtin"
         - fqcn: "ansible.posix"
         - fqcn: "networktocode.nautobot"
