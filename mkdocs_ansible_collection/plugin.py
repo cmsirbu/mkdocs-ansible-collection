@@ -36,7 +36,7 @@ class AnsibleDocsPlugin(mkdocs.plugins.BasePlugin[AnsibleDocsPluginConfig]):
         )
         self.jinja_env = Environment(
             loader=FileSystemLoader(package_files("mkdocs_ansible_collection") / "templates"),
-            autoescape=select_autoescape(default=True),
+            autoescape=select_autoescape(["html", "htm", "xml"]),
             trim_blocks=True,
             lstrip_blocks=True,
         )
