@@ -34,6 +34,7 @@ homepage = "https://mkdocs-ansible-collection.readthedocs.io/en/latest/"
 repository = "https://github.com/cmsirbu/mkdocs-ansible-collection"
 documentation = "https://mkdocs-ansible-collection.readthedocs.io/en/latest/"
 
+# Poetry Section
 [tool.poetry]
 packages = [{ include = "mkdocs_ansible_collection" }]
 
@@ -50,6 +51,21 @@ mkdocs-material = "^9.5.30"
 [build-system]
 requires = ["poetry-core>=2.0.0,<3.0.0"]
 build-backend = "poetry.core.masonry.api"
+# Poetry Section
+
+# UV Section
+[dependency-groups]
+dev = [
+    "ruff>=0.9.3",
+    "yamllint>=1.35.1",
+]
+docs = [
+    "mkdocs-material>=9.5.50",
+]
+
+[tool.uv]
+default-groups = ["dev", "docs"]
+# UV Section
 
 [tool.ruff]
 line-length = 100
