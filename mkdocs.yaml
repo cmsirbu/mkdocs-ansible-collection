@@ -50,7 +50,7 @@ plugins:
         - fqcn: "ansible.netcommon"
         - fqcn: "ansible.utils"
         - fqcn: "arista.eos"
-          plugin_types: # NYI
+          plugin_types:  # NYI
             - "inventory"
             - "module"
 

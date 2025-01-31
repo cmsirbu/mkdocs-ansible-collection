@@ -34,6 +34,9 @@ homepage = "https://mkdocs-ansible-collection.readthedocs.io/en/latest/"
 repository = "https://github.com/cmsirbu/mkdocs-ansible-collection"
 documentation = "https://mkdocs-ansible-collection.readthedocs.io/en/latest/"
 
+[project.entry-points]
+"mkdocs.plugins" = { ansible-collection = "mkdocs_ansible_collection.plugin:AnsibleDocsPlugin" }
+
 # Poetry Section
 [tool.poetry]
 packages = [{ include = "mkdocs_ansible_collection" }]

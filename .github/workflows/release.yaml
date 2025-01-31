@@ -1,7 +1,7 @@
 ---
-name: "release"
+name: "Release"
 
-on: # yamllint disable
+on: # yamllint disable-line
   release:
     types:
       - "published"
