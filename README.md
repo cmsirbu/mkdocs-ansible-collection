@@ -12,7 +12,7 @@
 
 2. Install any needed collection(s) using `ansible-galaxy collection install <names>` or point ansible at the correct collection path.
 
-3. Enable the plugin in your project's `mkdocs.yml` file:
+3. Enable the plugin in your project's `mkdocs.yaml` file:
 
     ```yaml
     plugins:
@@ -21,7 +21,7 @@
             - fqcn: "collection.example"
     ```
 
-4. Add an anchor page to the `nav` section of your project's `mkdocs.yml` file:
+4. Add an anchor page to the `nav` section of your project's `mkdocs.yaml` file:
 
     ```yaml
     nav:

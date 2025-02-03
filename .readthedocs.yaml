@@ -17,7 +17,7 @@ build:
 
 
 mkdocs:
-  configuration: "mkdocs.yml"
+  configuration: "mkdocs.yaml"
   # fail_on_warning: true
 
 # Use our docs/requirements.txt during installation.
