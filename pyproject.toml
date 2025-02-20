@@ -29,31 +29,6 @@ dependencies = [
     "ansible-core (>=2.15,<3.0)"
 ]
 
-[project.urls]
-homepage = "https://mkdocs-ansible-collection.readthedocs.io/en/latest/"
-repository = "https://github.com/cmsirbu/mkdocs-ansible-collection"
-documentation = "https://mkdocs-ansible-collection.readthedocs.io/en/latest/"
-
-[project.entry-points]
-"mkdocs.plugins" = { ansible-collection = "mkdocs_ansible_collection.plugin:AnsibleDocsPlugin" }
-
-# Poetry Section
-[tool.poetry]
-packages = [{ include = "mkdocs_ansible_collection" }]
-
-[tool.poetry.group.dev.dependencies]
-ruff = "^0.5.5"
-yamllint = "^1.35.1"
-
-[tool.poetry.group.docs.dependencies]
-mkdocs-material = "^9.5.30"
-
-[build-system]
-requires = ["poetry-core>=2.0.0,<3.0.0"]
-build-backend = "poetry.core.masonry.api"
-# Poetry Section
-
-# UV Section
 [dependency-groups]
 dev = [
     "ruff>=0.9.3",
@@ -63,9 +38,25 @@ docs = [
     "mkdocs-material>=9.5.50",
 ]
 
+[project.urls]
+homepage = "https://mkdocs-ansible-collection.readthedocs.io/en/latest/"
+repository = "https://github.com/cmsirbu/mkdocs-ansible-collection"
+documentation = "https://mkdocs-ansible-collection.readthedocs.io/en/latest/"
+
+[project.entry-points]
+"mkdocs.plugins" = { ansible-collection = "mkdocs_ansible_collection.plugin:AnsibleDocsPlugin" }
+
+# Poetry Section - Build Only
+[tool.poetry]
+packages = [{ include = "mkdocs_ansible_collection" }]
+
+[build-system]
+requires = ["poetry-core>=2.0.0,<3.0.0"]
+build-backend = "poetry.core.masonry.api"
+# Poetry Section - END
+
 [tool.uv]
 default-groups = ["dev", "docs"]
-# UV Section
 
 [tool.ruff]
 line-length = 100
