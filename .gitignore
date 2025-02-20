@@ -1,5 +1,6 @@
 collections
 site
+ansible-doc-*.json
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

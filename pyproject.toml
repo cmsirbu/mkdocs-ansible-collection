@@ -1,10 +1,14 @@
-[tool.poetry]
+[project]
 name = "mkdocs-ansible-collection"
 version = "0.2.1"
 description = "MkDocs Plugin that automatically generates pages for Ansible Collections."
-authors = ["Cristian Sirbu <cristian@trueneutral.eu>"]
-repository = "https://github.com/cmsirbu/mkdocs-ansible-collection"
+authors = [
+    { name = "Cristian Sirbu", email = "cristian@trueneutral.eu" }
+]
+license = "MIT"
+license-files = ["LICENSE"]
 readme = "README.md"
+keywords = ["mkdocs", "ansible"]
 classifiers = [
     "Intended Audience :: Developers",
     "Development Status :: 4 - Beta",
@@ -19,15 +23,23 @@ classifiers = [
     "Topic :: Documentation",
     "Topic :: Text Processing",
 ]
+requires-python = ">=3.9"
+dependencies = [
+    "mkdocs (>=1.6.0,<2.0.0)",
+    "ansible-core (>=2.15,<3.0)"
+]
+
+[project.urls]
+homepage = "https://mkdocs-ansible-collection.readthedocs.io/en/latest/"
+repository = "https://github.com/cmsirbu/mkdocs-ansible-collection"
+documentation = "https://mkdocs-ansible-collection.readthedocs.io/en/latest/"
+
+[project.entry-points]
+"mkdocs.plugins" = { ansible-collection = "mkdocs_ansible_collection.plugin:AnsibleDocsPlugin" }
+
+# Poetry Section
+[tool.poetry]
 packages = [{ include = "mkdocs_ansible_collection" }]
-
-[tool.poetry.plugins."mkdocs.plugins"]
-ansible-collection = "mkdocs_ansible_collection.plugin:AnsibleDocsPlugin"
-
-[tool.poetry.dependencies]
-python = "^3.9"
-mkdocs = "^1.6.0"
-ansible-core = "^2.15"
 
 [tool.poetry.group.dev.dependencies]
 ruff = "^0.5.5"
@@ -37,8 +49,23 @@ yamllint = "^1.35.1"
 mkdocs-material = "^9.5.30"
 
 [build-system]
-requires = ["poetry-core"]
+requires = ["poetry-core>=2.0.0,<3.0.0"]
 build-backend = "poetry.core.masonry.api"
+# Poetry Section
+
+# UV Section
+[dependency-groups]
+dev = [
+    "ruff>=0.9.3",
+    "yamllint>=1.35.1",
+]
+docs = [
+    "mkdocs-material>=9.5.50",
+]
+
+[tool.uv]
+default-groups = ["dev", "docs"]
+# UV Section
 
 [tool.ruff]
 line-length = 100
