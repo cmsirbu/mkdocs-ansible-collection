@@ -45,11 +45,11 @@ The plugin has been built for `mkdocs >= 1.6.0` and has only been tested with th
 
 ## Developing
 
-To set up the development environment, make sure you have [Poetry](https://python-poetry.org) `>=2.0.0` installed, then run the following commands in the project root:
+To set up the development environment, make sure you have [uv](https://docs.astral.sh/uv/getting-started/installation/) installed, then run the following commands in the project root:
 
 ```
-poetry install
-poetry run mkdocs serve
+uv sync
+uv run mkdocs serve
 ```
 
 ## Contributions
