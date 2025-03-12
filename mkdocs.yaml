@@ -75,7 +75,7 @@ markdown_extensions:
 watch:
   - "README.md"
 
-nav:
+nav: # yamllint disable rule:indentation
   - "index.md"
   - "User Guide": "user_guide.md"
   - "Ansible Builtins": "ansible.builtin"

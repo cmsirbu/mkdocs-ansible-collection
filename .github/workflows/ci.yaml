@@ -1,0 +1,47 @@
+---
+name: "CI"
+concurrency: # Cancel any existing runs of this workflow for this same PR
+  group: "${{ github.workflow }}-${{ github.ref }}"
+  cancel-in-progress: true
+on: # yamllint disable-line
+  push:
+    branches:
+      - "main"
+    tags:
+      - "v*"
+  pull_request:
+
+jobs:
+  shellcheck:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - run: shellcheck run.sh
+
+  lint:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v5
+        with:
+          version: "0.6.6"
+
+      - name: Run linting
+        run: "./run.sh lint"
+
+  # tests:
+  #   runs-on: "ubuntu-24.04"
+  #   strategy:
+  #     matrix:
+  #       python-version:
+  #         - "3.9"
+  #         - "3.10"
+  #         - "3.11"
+  #         - "3.12"
+  #         - "3.13"
+  #   steps:
+  #     - uses: "actions/checkout@v4"
+  #     - uses: "astral-sh/setup-uv@v5"
+  #       with:
+  #         version: "0.6.6"
+  #         python-version: "${{ matrix.python-version }}"
