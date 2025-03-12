@@ -8,19 +8,19 @@ version: 2
 
 # Set the version of Python in the build environment.
 build:
-  os: "ubuntu-22.04"
+  os: "ubuntu-24.04"
   tools:
-    python: "3.10"
+    python: "3.13"
   jobs:
+    create_environment:
+      - "asdf plugin add uv"
+      - "asdf install uv latest"
+      - "asdf global uv latest"
+    install:
+      - "uv sync"
     post_install:
-      - "ansible-galaxy collection install -r docs/requirements.yaml"
-
-
-mkdocs:
-  configuration: "mkdocs.yaml"
-  # fail_on_warning: true
-
-# Use our docs/requirements.txt during installation.
-python:
-  install:
-    - requirements: "docs/requirements.txt"
+      - "uv run ansible-galaxy collection install -r docs/requirements.yaml"
+    build:
+      html:
+        - "NO_COLOR=1 uv run mkdocs build --site-dir $READTHEDOCS_OUTPUT/html"
+        # TODO: enable fail on warnings: mkdocs build --strict
