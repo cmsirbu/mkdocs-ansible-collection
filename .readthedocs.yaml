@@ -17,7 +17,7 @@ build:
       - "asdf install uv latest"
       - "asdf global uv latest"
     install:
-      - "uv sync"
+      - "uv sync --no-dev"
     post_install:
       - "uv run ansible-galaxy collection install -r docs/requirements.yaml"
     build:
