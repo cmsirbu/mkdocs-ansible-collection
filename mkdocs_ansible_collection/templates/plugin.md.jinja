@@ -7,6 +7,10 @@
     ```
     ansible-galaxy collection install {{ fqcn }}
     ```
+    {% if pd['version_added'] is defined and pd['version_added'] is not none %}
+    Added in version `{{ pd['version_added'] }}`.
+    {% endif %}
+
     {% if pd['requirements'] is defined and pd['requirements'] is not none %}
     You need further requirements to be able to use this module, see the [Requirements](#requirements) section for details.
     {% endif %}
@@ -49,13 +53,15 @@ The following Python packages are needed on the host that executes this module:
 {% endfor %}
 {% endif %}
 
+{% if plugin_data['examples'] is defined and plugin_data['examples'] is not none %}
 ## Examples
 
 ```yaml
 {{ plugin_data['examples'] }}
 ```
+{% endif %}
 
-{% if plugin_data['return'] is not none %}
+{% if plugin_data['return'] is defined and plugin_data['return'] is not none %}
 ## Return Values
 
 | Key | Data Type | Description | Returned |
@@ -67,6 +73,7 @@ The following Python packages are needed on the host that executes this module:
 {% endfor %}
 {% endif %}
 
+{% if pd['author'] is defined and pd['author'] is not none %}
 ## Authors
 
 {% if pd['author'] is string %}
@@ -75,4 +82,5 @@ The following Python packages are needed on the host that executes this module:
 {% for author in pd['author'] %}
 - {{ author | title }}
 {% endfor %}
+{% endif %}
 {% endif %}
