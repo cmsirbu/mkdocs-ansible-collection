@@ -14,8 +14,10 @@ function _uvr {
 # -----------------------------------------------------------------------------
 
 function setup {
-    echo "---------- Installing python environment via uv."
+    echo "---------- Installing python environment via uv"
     _uvr uv sync
+    echo "---------- Installing ansible collections from docs/requirements.yaml"
+    _uvr uv run ansible-galaxy collection install -r docs/requirements.yaml
 }
 
 function lint {
@@ -34,8 +36,17 @@ function autofix {
     _uvr ruff format mkdocs_ansible_collection
 }
 
+function serve {
+    echo "---------- BUILDING AND SERVING DOCS"
+    _uvr mkdocs serve "$@"
+}
+
+function test-build {
+    echo "---------- BUILDING DOCS"
+    _uvr mkdocs build --strict
+}
+
 # TODO: function test
-# TODO: function docs
 
 # -----------------------------------------------------------------------------
 

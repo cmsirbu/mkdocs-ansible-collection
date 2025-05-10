@@ -7,12 +7,12 @@ nav:
   # The anchor is named after the Collection FQCN and it tells mkdocs where
   # to generate the documentation tree. The following examples show all of
   # the currently supported combinations:
-  - "Ansible Builtins": "ansible.builtin"
   - "Collection Showcase":
     - "showcase/index.md"
     - "ansible.posix"
     - "ansible.netcommon"
     - "ansible.utils"
     - "Arista EOS": "arista.eos"
+  - "Ansible Builtins": "ansible.builtin"
   - "networktocode.nautobot"
 ```

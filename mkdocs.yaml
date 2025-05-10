@@ -50,12 +50,16 @@ plugins:
         - fqcn: "ansible.netcommon"
         - fqcn: "ansible.utils"
         - fqcn: "arista.eos"
-          plugin_types:  # NYI
+          plugin_types:  # Not Yet Implemented
             - "inventory"
             - "module"
 
 
 markdown_extensions:
+  - "attr_list"
+  - "pymdownx.emoji":
+      emoji_index: !!python/name:material.extensions.emoji.twemoji
+      emoji_generator: !!python/name:material.extensions.emoji.to_svg
   - "admonition"
   - "toc":
       permalink: true
@@ -71,18 +75,20 @@ markdown_extensions:
           class: "mermaid"
           format: !!python/name:pymdownx.superfences.fence_code_format
   - "footnotes"
+  - "tables"
 
 watch:
   - "README.md"
 
 nav: # yamllint disable rule:indentation
   - "index.md"
-  - "User Guide": "user_guide.md"
-  - "Ansible Builtins": "ansible.builtin"
+  - "User Guide": "user/index.md"
+  - "Developer Guide": "dev/index.md"
   - "Collection Showcase":
     - "showcase/index.md"
     - "ansible.posix"
     - "ansible.netcommon"
     - "ansible.utils"
     - "Arista EOS": "arista.eos"
+  - "Ansible Builtins": "ansible.builtin"
   - "networktocode.nautobot"

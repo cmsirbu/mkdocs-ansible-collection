@@ -22,5 +22,4 @@ build:
       - "uv run ansible-galaxy collection install -r docs/requirements.yaml"
     build:
       html:
-        - "NO_COLOR=1 uv run mkdocs build --site-dir $READTHEDOCS_OUTPUT/html"
-        # TODO: enable fail on warnings: mkdocs build --strict
+        - "NO_COLOR=1 uv run mkdocs build --strict --site-dir $READTHEDOCS_OUTPUT/html"
