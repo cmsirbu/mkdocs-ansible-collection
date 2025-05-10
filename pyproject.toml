@@ -1,6 +1,6 @@
 [project]
 name = "mkdocs-ansible-collection"
-version = "0.2.1"
+version = "1.0.0"
 description = "MkDocs Plugin that automatically generates pages for Ansible Collections."
 authors = [
     { name = "Cristian Sirbu", email = "cristian@trueneutral.eu" }
@@ -11,8 +11,7 @@ readme = "README.md"
 keywords = ["mkdocs", "ansible"]
 classifiers = [
     "Intended Audience :: Developers",
-    "Development Status :: 4 - Beta",
-    # "Development Status :: 5 - Production/Stable",
+    "Development Status :: 5 - Production/Stable",
     "License :: OSI Approved :: MIT License",
     "Operating System :: OS Independent",
     "Programming Language :: Python :: 3",
@@ -20,6 +19,7 @@ classifiers = [
     "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
     "Topic :: Documentation",
     "Topic :: Text Processing",
 ]

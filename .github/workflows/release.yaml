@@ -8,7 +8,7 @@ on: # yamllint disable-line
 
 jobs:
   build:
-    name: "Build package with poetry"
+    name: "Build package and store artifacts"
     # https://github.com/actions/runner-images/blob/main/images/ubuntu/Ubuntu2404-Readme.md
     runs-on: "ubuntu-24.04"
     steps:
@@ -17,7 +17,7 @@ jobs:
       - name: "Install uv"
         uses: "astral-sh/setup-uv@v5"
         with:
-          version: "0.6.4"
+          version: "0.6.6"
 
       - name: "Build package"
         run: "uv build"
