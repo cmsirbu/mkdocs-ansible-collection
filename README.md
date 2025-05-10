@@ -33,7 +33,7 @@
         - "example.collection" # Without a custom page name
     ```
 
-For more details, check out the [User Guide](https://mkdocs-ansible-collection.readthedocs.io/en/stable/user/) and look at the live example of [this project's docs](https://github.com/cmsirbu/mkdocs-ansible-collection), themselves which showcase how to build and host collection docs on the awesome [Read the Docs](https://about.readthedocs.com/) service!
+For more details, check out the [User Guide](https://mkdocs-ansible-collection.readthedocs.io/en/stable/user/) and look at the live example of [this project's docs](https://github.com/cmsirbu/mkdocs-ansible-collection), which showcase how to build and host collection docs on the awesome [Read the Docs](https://about.readthedocs.com/) service!
 
 ## Contributions
 
