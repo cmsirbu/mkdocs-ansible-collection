@@ -5,5 +5,6 @@ This is the list of `{{ plugin_type }}` plugins in the `{{ fqcn }}` collection:
 | Plugin | Description |
 | ------ | ------ |
 {% for plugin, plugin_data in plugins.items() %}
-| [{{ plugin }}](./{{ plugin | replace(fqcn + '.', '') }}.md) | {% if 'doc' in plugin_data and 'description' in plugin_data['doc'] %}{{ plugin_data['doc']['description'] | join(' ') }}{% else %}-{% endif %}|
+| [{{ plugin }}](./{{ plugin | replace(fqcn + '.', '') }}.md) |
+{{- plugin_data['doc']['short_description'] | default('--') }}
 {% endfor %}
