@@ -16,8 +16,8 @@
     {% endif %}
 
 ## Synopsis
-
-{% for desc_item in pd['description'] %}
+{% set plugin_description = [pd['description']] if pd['description'] is string else pd['description'] %}
+{% for desc_item in plugin_description %}
 - {{ desc_item}}
 {% endfor %}
 
