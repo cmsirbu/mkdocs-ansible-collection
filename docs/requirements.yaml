@@ -3,3 +3,6 @@ collections:
   - name: "ansible.posix"
   - name: "networktocode.nautobot"
   - name: "arista.eos"
+  # - name: "arista.avd"
+  - name: "opsmill.infrahub"
+  - name: "nokia.srlinux"
