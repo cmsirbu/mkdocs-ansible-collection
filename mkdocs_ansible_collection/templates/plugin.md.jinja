@@ -34,29 +34,53 @@ The following Python packages are needed on the host that executes this module:
 {% if pd['options'] is defined and pd['options'] is not none %}
 ## Parameters
 
-| Parameter | Defaults / Choices | Comments |
-| --------- | ------------------ | -------- |
+<table>
+  <thead>
+  <tr>
+  <th>Parameter</th>
+  <th>Defaults / Choices</th>
+  <th>Comments</th>
+  </tr>
+  </thead>
+<tbody>
 {% for param_name, param_values in pd['options'].items() %}
-| **{{ param_name }}**
+<tr>
+<td><strong>{{ param_name }}</strong>
   {%- if param_values['type'] %}<br>{{ param_values['type'] }}
     {%- if param_values['elements'] %} / elements={{ param_values['elements'] }}{% endif %}
   {%- endif %}
-  {%- if param_values['required'] %}<br>*required*{% endif %} |
-{%- if param_values['default'] %}**Default**: {{ param_values['default'] }}<br>{% endif %}
-  {%- if param_values['choices'] %}**Choices**: {{ param_values['choices'] | join(', ') }}{% endif %} |
+  {%- if param_values['required'] %}<br><em>required</em>{% endif %}
+</td>
+<td>
+{%- if param_values['default'] %}<strong>Default</strong>: {{ param_values['default'] }}<br>{% endif %}
+  {%- if param_values['choices'] %}<strong>Choices</strong>: {{ param_values['choices'] | join(', ') }}{% endif %}
+</td>
+<td>
 {{- param_values['description'] if param_values['description'] is string else param_values['description'] | join('<br>') }}
   {%- for env_var in param_values['env'] %}<br>Env: {{ env_var['name'] }}{% endfor %}
-  {%- if param_values['version_added'] is defined %}<br>{{ 'Version Added: ' ~ param_values['version_added'] }}{% endif %} |
+  {%- if param_values['version_added'] is defined %}<br>{{ 'Version Added: ' ~ param_values['version_added'] }}{% endif %}
+</td>
+</tr>
 {% if param_values['suboptions'] %}
   {% for subopt_name, subopt_values in param_values['suboptions'].items() %}
-  | {{ param_name }}.**{{ subopt_name }}** |
-  {%- if subopt_values['default'] %}**Default**: {{ subopt_values['default'] }}<br>{% endif %}
-    {%- if subopt_values['choices'] %}**Choices**: {{ subopt_values['choices'] | join(', ') }}{% endif %} |
-  {{- subopt_values['description'] if subopt_values['description'] is string else subopt_values['description'] | join('<br>') }} |
+  <tr>
+    <td>
+    {{ param_name }}.<strong>{{ subopt_name }}</strong>
+    </td>
+    <td>
+    {%- if subopt_values['default'] %}<strong>Default</strong>: {{ subopt_values['default'] }}<br>{% endif %}
+    {%- if subopt_values['choices'] %}<strong>Choices</strong>: {{ subopt_values['choices'] | join(', ') }}{% endif %}
+    </td>
+    <td>
+    {{- subopt_values['description'] if subopt_values['description'] is string else subopt_values['description'] | join('<br>') }}
+    </td>
+  </tr>
   {% endfor %}
 {% endif %}
 {% endfor %}
 {% endif %}
+</tbody>
+</table>
 
 {% if pd['notes'] is defined and pd['notes'] is not none %}
 ## Notes
