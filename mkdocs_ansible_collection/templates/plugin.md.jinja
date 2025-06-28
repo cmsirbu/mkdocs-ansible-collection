@@ -47,6 +47,14 @@ The following Python packages are needed on the host that executes this module:
 {{- param_values['description'] if param_values['description'] is string else param_values['description'] | join('<br>') }}
   {%- for env_var in param_values['env'] %}<br>Env: {{ env_var['name'] }}{% endfor %}
   {%- if param_values['version_added'] is defined %}<br>{{ 'Version Added: ' ~ param_values['version_added'] }}{% endif %} |
+{% if param_values['suboptions'] %}
+  {% for subopt_name, subopt_values in param_values['suboptions'].items() %}
+  | {{ param_name }}.**{{ subopt_name }}** |
+  {%- if subopt_values['default'] %}**Default**: {{ subopt_values['default'] }}<br>{% endif %}
+    {%- if subopt_values['choices'] %}**Choices**: {{ subopt_values['choices'] | join(', ') }}{% endif %} |
+  {{- subopt_values['description'] if subopt_values['description'] is string else subopt_values['description'] | join('<br>') }} |
+  {% endfor %}
+{% endif %}
 {% endfor %}
 {% endif %}
 
