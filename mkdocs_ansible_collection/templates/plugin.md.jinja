@@ -34,11 +34,16 @@ The following Python packages are needed on the host that executes this module:
 {% if pd['options'] is defined and pd['options'] is not none %}
 ## Parameters
 
-| Parameter | Data Type | Environment Variable | Comments |
-| --------- | --------- | -------------------- | -------- |
+| Parameter | Choices / Defaults | Configuration | Comments |
+| --------- | ------------------ | ------------- | -------- |
 {% for param_name, param_values in pd['options'].items() %}
-| **{{ param_name }}**{% if param_values['required'] %}<br>*required*{% endif %} |
-{{- param_values['type'] }} | {% for env_var in param_values['env'] %} {{ env_var['name'] }} {% endfor %} |
+| **{{ param_name }}**
+  {%- if param_values['type'] %}<br>{{ param_values['type'] }}
+    {%- if param_values['elements'] %} / elements={{ param_values['elements'] }}{% endif %}
+  {%- endif %}
+  {%- if param_values['required'] %}<br>*required*{% endif %} |
+{{- 'Choices' }} <br>|
+{%- for env_var in param_values['env'] %} {{ env_var['name'] }} {% endfor %} |
 {{- param_values['description'] if param_values['description'] is string else param_values['description'] | join(' ') }}
 {%- if param_values['version_added'] is defined %}<br>{{ 'Version Added: ' ~ param_values['version_added'] }}{% endif %} |
 {% endfor %}
