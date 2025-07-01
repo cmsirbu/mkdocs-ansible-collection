@@ -7,9 +7,13 @@ hide:
 
 This document describes all new features and changes in this project's releases. The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
+## Unreleased
+
+This section contains (if any) changes that have not yet been released.
 
 ## [v1.1.0 (2025-07-01)](https://github.com/cmsirbu/mkdocs-ansible-collection/releases/tag/v1.1.0)
+
+This release makes major improvements to the plugin parameters table in line with other ansible documentation sites (see [gql_inventory](https://mkdocs-ansible-collection.readthedocs.io/en/latest/networktocode.nautobot/inventory/gql_inventory.html) for a detailed showcase) and fixes an ugly display bug for plugin descriptions.
 
 ### Changed
 
