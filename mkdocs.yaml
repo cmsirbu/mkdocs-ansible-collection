@@ -85,9 +85,10 @@ watch:
   - "README.md"
 
 nav: # yamllint disable rule:indentation
-  - "index.md"
+  - "Overview": "index.md"
   - "User Guide": "user/index.md"
   - "Developer Guide": "dev/index.md"
+  - "Release Notes": "release_notes.md"
   - "Collection Showcase":
     - "showcase/index.md"
     - "ansible.posix"
