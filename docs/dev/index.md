@@ -38,3 +38,25 @@ To extract a JSON metadata file from an ansible collection, use the following co
 ```
 uv run ansible-doc --metadata-dump --no-fail-on-errors networktocode.nautobot > ansible-doc-nautobot.json
 ```
+
+## Housekeeping
+
+### Upgrading `uv`
+
+To use a newer `uv` version across the board, make sure to upgrade and test locally first, then replace the pinned version in these files:
+
+- `.github/workflows/ci.yaml`
+- `.github/workflows/release.yaml`
+- `.readthedocs.yaml`
+
+### Release Checklist
+
+To cut a new release (e.g. for `v1.4.2`), follow these steps:
+
+1. Bump the version in `pyproject.toml` with `uv version --bump major/minor/patch`.
+2. Create a new branch with the new version `git switch -c release-v1.4.2`.
+3. Upgrade lockfile package versions with `uv lock --upgrade`.
+4. Update the release notes in `./docs/release_notes.md`.
+5. Create PR from `release-v1.4.2` against `main`. Wait for CI to pass and merge PR.
+6. Create a new release in GitHub with a new tag, selecting `Create new tag: v1.4.2 on publish`. Copy release notes from docs.
+7. Publish the release and verify the `release` workflow succeeds and the package is published to PyPI.
