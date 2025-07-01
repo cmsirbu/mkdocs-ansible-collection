@@ -9,6 +9,8 @@ This document describes all new features and changes in this project's releases.
 
 ## [Unreleased]
 
+## [v1.1.0 (2025-07-01)](https://github.com/cmsirbu/mkdocs-ansible-collection/releases/tag/v1.1.0)
+
 ### Changed
 
 - [#27](https://github.com/cmsirbu/mkdocs-ansible-collection/pull/27) Improved the template that renders the parameters table for plugins:
