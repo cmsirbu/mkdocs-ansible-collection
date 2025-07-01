@@ -1,6 +1,6 @@
 [project]
 name = "mkdocs-ansible-collection"
-version = "1.0.0"
+version = "1.1.0"
 description = "MkDocs Plugin that automatically generates pages for Ansible Collections."
 authors = [
     { name = "Cristian Sirbu", email = "cristian@trueneutral.eu" }
