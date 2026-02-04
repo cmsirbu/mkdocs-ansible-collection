@@ -14,6 +14,7 @@ This section contains (if any) changes that have not yet been released.
 ### Changed
 
 - Added Python 3.14 and dropped Python 3.9.
+- Set minimum `ansible-core` in line with Python support.
 
 ### Housekeeping
 
