@@ -11,9 +11,9 @@ This MkDocs plugin generates documentation pages dynamically from Ansible Collec
 
 The dependencies and minimum supported versions are as follows:
 
-- [Python](https://www.python.org/downloads/) `3.9`
+- [Python](https://www.python.org/downloads/) `3.10`
 - [MkDocs](https://www.mkdocs.org) `1.6.0`
-- [Ansible Core](https://docs.ansible.com/ansible-core/devel/index.html) `2.15`
+- [Ansible Core](https://docs.ansible.com/ansible-core/devel/index.html) `2.16`
 
 While the [Material for MkDocs](https://squidfunk.github.io/mkdocs-material/) theme is not a direct requirement, the plugin has only been developed and tested with it.
 
