@@ -11,6 +11,14 @@ This document describes all new features and changes in this project's releases.
 
 This section contains (if any) changes that have not yet been released.
 
+### Changed
+
+- Added Python 3.14 and dropped Python 3.9.
+
+### Housekeeping
+
+- Updated `uv` to `0.9.30`.
+
 ## [v1.1.0 (2025-07-01)](https://github.com/cmsirbu/mkdocs-ansible-collection/releases/tag/v1.1.0)
 
 This release makes major improvements to the plugin parameters table in line with other ansible documentation sites (see [gql_inventory](https://mkdocs-ansible-collection.readthedocs.io/en/latest/networktocode.nautobot/inventory/gql_inventory.html) for a detailed showcase) and fixes an ugly display bug for plugin descriptions.
