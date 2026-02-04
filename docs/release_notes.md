@@ -13,12 +13,12 @@ This section contains (if any) changes that have not yet been released.
 
 ### Changed
 
-- Added Python 3.14 and dropped Python 3.9.
-- Set minimum `ansible-core` in line with Python support.
+- [#34](https://github.com/cmsirbu/mkdocs-ansible-collection/pull/34) Added Python `3.14` and dropped Python `3.9`.
+- [#34](https://github.com/cmsirbu/mkdocs-ansible-collection/pull/34) Set minimum `ansible-core` in line with Python support.
 
 ### Housekeeping
 
-- Updated `uv` to `0.9.30`.
+- [#34](https://github.com/cmsirbu/mkdocs-ansible-collection/pull/34) Updated `uv` to `0.9.30`.
 
 ## [v1.1.0 (2025-07-01)](https://github.com/cmsirbu/mkdocs-ansible-collection/releases/tag/v1.1.0)
 
