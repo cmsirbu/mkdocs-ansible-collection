@@ -14,8 +14,8 @@ build:
   jobs:
     create_environment:
       - "asdf plugin add uv"
-      - "asdf install uv 0.7.17"
-      - "asdf global uv 0.7.17"
+      - "asdf install uv 0.9.30"
+      - "asdf global uv 0.9.30"
     install:
       - "uv sync --no-dev"
     post_install:
