@@ -30,6 +30,9 @@ class AnsibleDocsPlugin(mkdocs.plugins.BasePlugin[AnsibleDocsPluginConfig]):
         """Instantiation."""
         super().__init__(*args, **kwargs)
 
+        # Cache for the single ansible-doc --metadata-dump of all installed collections.
+        self._full_metadata = None
+
         # Load templates from package and initialize Jinja environment
         log.debug(
             f"Jinja templates path {package_files('mkdocs_ansible_collection') / 'templates'}"
@@ -71,7 +74,7 @@ class AnsibleDocsPlugin(mkdocs.plugins.BasePlugin[AnsibleDocsPluginConfig]):
         for collection in self.config.collections:
             # Get collection metadata by running ansible-doc
             fqcn = collection["fqcn"]
-            collection_metadata = AnsibleDocsPlugin._get_ansible_doc_metadata(fqcn)
+            collection_metadata = self._get_ansible_doc_metadata(fqcn)
 
             # Generate the index for the collection sub-path
             # TODO: extract requirements from all plugins and list on this page
@@ -215,19 +218,21 @@ class AnsibleDocsPlugin(mkdocs.plugins.BasePlugin[AnsibleDocsPluginConfig]):
 
         return nf
 
-    @staticmethod
-    def _get_ansible_doc_metadata(fqcn):
+    def _get_full_metadata(self):
         """
-        Retrieve Ansible collection metadata via the ansible-doc command.
+        Retrieve metadata for all installed collections via a single ansible-doc call.
 
-        Args:
-            fqcn (string): ansible fully-qualified collection name
+        The result is cached on the instance so the (expensive) ansible-core startup is
+        only paid once per build, instead of once per configured collection.
 
         Returns:
-            dict: parsed collection metadata from JSON
+            dict: parsed metadata from JSON for all installed collections
         """
-        log.info(f"Fetching collection {fqcn} metadata from ansible-doc.")
-        ansible_doc_command_params = ["ansible-doc", "--metadata-dump", "--no-fail-on-errors", fqcn]
+        if self._full_metadata is not None:
+            return self._full_metadata
+
+        log.info("Fetching metadata for all collections from ansible-doc.")
+        ansible_doc_command_params = ["ansible-doc", "--metadata-dump", "--no-fail-on-errors"]
         result = subprocess.run(
             ansible_doc_command_params,
             capture_output=True,
@@ -236,17 +241,52 @@ class AnsibleDocsPlugin(mkdocs.plugins.BasePlugin[AnsibleDocsPluginConfig]):
         if result.returncode != 0:
             command = " ".join(ansible_doc_command_params)
             log.error(f"Command {command} failed with stderr: {result.stderr}")
-            raise PluginError(
-                f"Couldn't fetch collection {fqcn} metadata due to errors from ansible-doc!"
+            raise PluginError("Couldn't fetch collection metadata due to errors from ansible-doc!")
+
+        try:
+            parsed_data = json.loads(result.stdout)
+        except json.decoder.JSONDecodeError:
+            raise PluginError("Couldn't parse ansible-doc output as valid JSON data!")
+
+        # Remove plugin types that shouldn't be in the docs
+        for plugin_type in DISABLED_PLUGIN_TYPES:
+            parsed_data["all"].pop(plugin_type, None)
+
+        self._full_metadata = parsed_data
+        return self._full_metadata
+
+    def _get_ansible_doc_metadata(self, fqcn):
+        """
+        Retrieve a single collection's metadata, filtered from the full ansible-doc dump.
+
+        Args:
+            fqcn (string): ansible fully-qualified collection name
+
+        Returns:
+            dict: collection metadata in the same shape as a per-collection ansible-doc dump
+        """
+        full_metadata = self._get_full_metadata()
+
+        # Filter the merged dump down to plugins belonging to this collection. The trailing
+        # dot in the prefix keeps similar names distinct (e.g. nokia.eda_aaa_v1 vs
+        # nokia.eda_aaa_v1alpha1). Every plugin type key is preserved (even when empty) so
+        # downstream iteration in on_files behaves identically to the old per-call output.
+        prefix = f"{fqcn}."
+        collection_metadata = {"all": {}}
+        plugin_count = 0
+        for plugin_type, plugins in full_metadata["all"].items():
+            filtered = {
+                plugin_fqname: plugin_data
+                for plugin_fqname, plugin_data in plugins.items()
+                if plugin_fqname.startswith(prefix)
+            }
+            collection_metadata["all"][plugin_type] = filtered
+            plugin_count += len(filtered)
+
+        if plugin_count == 0:
+            log.warning(
+                f"No plugins found for collection {fqcn} - is it installed?"
+                + " Please check your mkdocs configuration and installed collections!"
             )
-        else:
-            try:
-                parsed_data = json.loads(result.stdout)
-            except json.decoder.JSONDecodeError:
-                raise PluginError("Couldn't parse ansible-doc output as valid JSON data!")
 
-            # Remove plugin types that shouldn't be in the docs
-            for plugin_type in DISABLED_PLUGIN_TYPES:
-                del parsed_data["all"][plugin_type]
-
-            return parsed_data
+        return collection_metadata
