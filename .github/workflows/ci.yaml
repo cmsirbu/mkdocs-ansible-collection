@@ -13,23 +13,23 @@ on: # yamllint disable-line
 
 jobs:
   shellcheck:
-    runs-on: "ubuntu-24.04"
+    runs-on: "ubuntu-26.04"
     steps:
       - uses: "actions/checkout@v4"
       - run: "shellcheck run.sh"
 
   lint:
-    runs-on: "ubuntu-24.04"
+    runs-on: "ubuntu-26.04"
     steps:
       - uses: "actions/checkout@v4"
-      - uses: "astral-sh/setup-uv@v5"
+      - uses: "astral-sh/setup-uv@v10.1.0"
         with:
-          version: "0.9.30"
+          version-file: ".tool-versions"
       - run: "./run.sh setup"
       - run: "./run.sh lint"
 
   tests:
-    runs-on: "ubuntu-24.04"
+    runs-on: "ubuntu-26.04"
     needs:
       - "shellcheck"
       - "lint"
@@ -43,9 +43,9 @@ jobs:
           - "3.14"
     steps:
       - uses: "actions/checkout@v4"
-      - uses: "astral-sh/setup-uv@v5"
+      - uses: "astral-sh/setup-uv@v10.1.0"
         with:
-          version: "0.9.30"
+          version-file: ".tool-versions"
           python-version: "${{ matrix.python-version }}"
       - run: "./run.sh setup"
       - run: "./run.sh test-build"

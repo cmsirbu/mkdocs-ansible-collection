@@ -13,9 +13,9 @@ build:
     python: "3.13"
   jobs:
     create_environment:
+      # The uv version is pinned in .tool-versions at the repo root, which asdf reads automatically
       - "asdf plugin add uv"
-      - "asdf install uv 0.9.30"
-      - "asdf global uv 0.9.30"
+      - "asdf install uv"
     install:
       - "uv sync --no-dev"
     post_install:
