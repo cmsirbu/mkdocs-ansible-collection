@@ -32,10 +32,10 @@ dependencies = [
 [dependency-groups]
 dev = [
     "ruff>=0.9.3",
-    "yamllint>=1.35.1",
+    "yamllint>=1.38.0",
 ]
 docs = [
-    "mkdocs-material>=9.7.1",
+    "mkdocs-material>=9.7.7",
 ]
 
 [project.urls]
